@@ -9,8 +9,8 @@ class CapsNet(nn.Module):
         self.conv = nn.Conv2d(input_size, 256, 4)
         self.capslayers = []
 
-    def init_connections():
-        for layer in capslayers[:-1]:
+    def init_connections(self):
+        for layer in self.capslayers[:-1]:
             for i, capsule in layer.capsules:
                 capsule.init_connection(layer.capsules[i+1]) 
         

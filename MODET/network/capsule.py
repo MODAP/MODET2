@@ -11,7 +11,7 @@ class CapsLayer(nn.Module):
 class Capsule(nn.Module):
     def __init__(self, dimensions):
         self.dim = dimensions
-        pass
+        self.children = []
 
     # We need to initialize connections/weights after all capsules defined
     def init_connection(self, capsule):
@@ -23,7 +23,8 @@ class Capsule(nn.Module):
         for child in self.children:
             # Begin with affine transform of output
             # child.weights[self] is sketch, trying to indicate $\hat{\vec{u}}_{j|i} = \vec{W}_{ij} \vec{u}_i$
-            uhat = child.weights[self] * child.u
+            # Note that there is no normal u, just the child capsule's s because prev layers output is next layer input
+            uhat = child.weights[self] * child.s
             # Compute the traditional Wx+b step, in this case $\sum_i c_ij \hat{\vec{u}}_{j|i}$
             self.s += self.route_consts[child] * uhat
         # Squashing function

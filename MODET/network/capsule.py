@@ -17,6 +17,7 @@ class Capsule(nn.Module):
 
     # We need to initialize connections/weights after all capsules defined
     def init_connection(self, capsule):
+#        self.weights = [] This will be a problem...
         self.children.append(capsule)
     
     # Boilerplate-y for now.

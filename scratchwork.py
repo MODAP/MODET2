@@ -16,7 +16,7 @@ class CapsNet(nn.Module):
     def init_connections():
         for layer in capslayers[:-1]:
             for i, capsule in layer.capsules:
-                capsule.init_connection(layer.capsules[i+1])        
+                capsule.init_connection(layer.capsules[i+1]) 
         
     def forward(self, x):
         pass 

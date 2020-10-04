@@ -5,12 +5,14 @@ import torch.nn.functional as F
 
 # Maybe have CapsLayer class? TODO Think about if actually needed
 class CapsLayer(nn.Module):
-    def __init__(self):
+    def __init__(self, num_capsules, dims):  # Unsure about how to handle dimensionalities for now
         self.capsules = []
+        for i in range(num_capsules):
+            self.capsules.append(Capsule(dims))
     
 class Capsule(nn.Module):
     def __init__(self, dimensions):
-        self.dim = dimensions
+        self.dims = dimensions
         self.children = []
 
     # We need to initialize connections/weights after all capsules defined
@@ -18,8 +20,8 @@ class Capsule(nn.Module):
         self.children.append(capsule)
     
     # Boilerplate-y for now.
-    def forward(self, x):
-        self.s = torch.tensor([0]*self.dims) # TODO understanding dimensionalities and specifics of calcs will take a bit
+    def forward(self):
+        self.s = torch.tensor([0.0]*self.dims) # TODO understanding dimensionalities and specifics of calcs will take a bit
         for child in self.children:
             # Begin with affine transform of output
             # child.weights[self] is sketch, trying to indicate $\hat{\vec{u}}_{j|i} = \vec{W}_{ij} \vec{u}_i$

@@ -19,7 +19,7 @@ class Capsule(nn.Module):
     
     # Boilerplate-y for now.
     def forward(self, x):
-        self.s = torch.tensor([0]*dims) # TODO understanding dimensionalities and specifics of calcs will take a bit
+        self.s = torch.tensor([0]*self.dims) # TODO understanding dimensionalities and specifics of calcs will take a bit
         for child in self.children:
             # Begin with affine transform of output
             # child.weights[self] is sketch, trying to indicate $\hat{\vec{u}}_{j|i} = \vec{W}_{ij} \vec{u}_i$

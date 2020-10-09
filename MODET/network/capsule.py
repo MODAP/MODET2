@@ -1,12 +1,21 @@
+# pylint:disable = not-callable no-member
+
 import torchvision
 import torch
 from torch import nn
+from torch import tensor
 import torch.nn.functional as F
 
-# Maybe have CapsLayer class? TODO Think about if actually needed
-class CapsLayer(nn.Module):
+# Convolutional Caps Layer
+class ConvCapsLayer(nn.Module):
+    def __init__(self, length, in_channels, out_channels, kernal_size):
+        self.capsules = [nn.Conv2d(in_channels, out_channels, kernal_size) for i in length]
+
+# Class Caps Layer
+class ClassCapsLayer(nn.Module):
     def __init__(self):
         self.capsules = []
+
     
 class Capsule(nn.Module):
     def __init__(self, dimensions):
@@ -29,3 +38,9 @@ class Capsule(nn.Module):
             self.s += self.route_consts[child] * uhat
         # Squashing function
         self.s = ((torch.norm(self.s)**2)/(1+torch.norm(self.s)**2)) * self.s/torch.norm(self.s)
+
+# Pulling a Zoch
+if __name__ == '__main__':
+    cap = Capsule(15)
+
+

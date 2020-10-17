@@ -9,21 +9,17 @@ import torch.nn.functional as F
 # Convolutional Caps Layer
 class ConvCapsLayer(nn.Module):
     def __init__(self, length, in_channels, out_channels, kernal_size):
-        self.capsules = [nn.Conv2d(in_channels, out_channels, kernal_size) for i in length]
+
+        super(ConvCapsLayer, self).__init__()
+
+        self.capsules = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernal_size) for _ in length])
 
 # Class Caps Layer
 class ClassCapsLayer(nn.Module):
     def __init__(self):
+        super(ClassCapsLayer, self).__init__()
         self.capsules = []
 
-# =======
-# # Maybe have CapsLayer class? TODO Think about if actually needed
-# class CapsLayer(nn.Module):
-    # def __init__(self, num_capsules, dims):  # Unsure about how to handle dimensionalities for now
-        # self.capsules = []
-        # for i in range(num_capsules):
-            # self.capsules.append(Capsule(dims))
-# >>>>>>> 6f27ba9f8dd9d52eeecb44a272e93b3e9ee9e4b8
     
 class Capsule(nn.Module):
     def __init__(self, dimensions):

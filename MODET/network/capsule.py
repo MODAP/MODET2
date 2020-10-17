@@ -22,21 +22,34 @@ class ConvCapsLayer(nn.Module):
         
 # Class Caps Layer
 class ClassCapsLayer(nn.Module):
-    def __init__(self, length, routes, in_channels, out_channels):
+    def __init__(self, length, routes, in_channels, out_channels, iterations):
         super(ClassCapsLayer, self).__init__()
+        
         self.capsules = []
+        self.iterations = iterations
         self.route_weights = nn.Parameter(torch.randn(length, routes, in_channels, out_channels)) #https://github.com/gram-ai/capsule-networks/blob/master/capsule_network.py#L63
 
     @staticmethod
     def squash(s):
         return ((torch.norm(s)**2)/(1+torch.norm(s)**2)) * s/torch.norm(s)
     
+    # AcTIve RouTIng!
     def forward(self, x): # x is input
         priorsUij = x @ self.route_weights # We need to pad the dimensions of these two so that they can be dot producted
 
         logitsBij = torch.Variable(torch.zeros(*priorsUij.size()))# .cuda() uncomment when using cuda
-
         
+        for i in self.iterations:
+            probsCi = F.softmax(logitsBij, dim=2) # Calculating softmax probablities
+            sumSj = (probsCi*priorsUij).sum(dim=2, keepdim=True) # Calculating probability weighted priors
+            outputVj = self.squash(sumSj) # Routing coeffs calculated by squashing the weighted priors
+            
+            ## Update Bij
+            if i != self.iterations-1:
+                logitsBij = logitsBij + priorsUij * outputVj
+
+        return outputVj
+
 
 class Capsule(nn.Module):
     def __init__(self, dimensions):

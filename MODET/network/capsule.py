@@ -14,13 +14,30 @@ class ConvCapsLayer(nn.Module):
 
         self.capsules = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernal_size) for _ in length])
 
+    def forward(self, x):
+        capsOut = [capsule(x).view(x.size(0), -1, 1) for capsule in self.capsules] # compile as a capsule, and rezie to [major, random, and 1] dims. for fire detections, there should be 2 classes --- fire, no fire.
+        capsOutCat = torch.cat(capsOut, dim=-1)
+
+        return capsOutCat
+        
 # Class Caps Layer
 class ClassCapsLayer(nn.Module):
-    def __init__(self):
+    def __init__(self, length, routes, in_channels, out_channels):
         super(ClassCapsLayer, self).__init__()
         self.capsules = []
+        self.route_weights = nn.Parameter(torch.randn(length, routes, in_channels, out_channels)) #https://github.com/gram-ai/capsule-networks/blob/master/capsule_network.py#L63
 
+    @staticmethod
+    def squash(s):
+        return ((torch.norm(s)**2)/(1+torch.norm(s)**2)) * s/torch.norm(s)
     
+    def forward(self, x): # x is input
+        priorsUij = x @ self.route_weights # We need to pad the dimensions of these two so that they can be dot producted
+
+        logitsBij = torch.Variable(torch.zeros(*priorsUij.size()))# .cuda() uncomment when using cuda
+
+        
+
 class Capsule(nn.Module):
     def __init__(self, dimensions):
         self.dims = dimensions
@@ -42,10 +59,9 @@ class Capsule(nn.Module):
             # Compute the traditional Wx+b step, in this case $\sum_i c_ij \hat{\vec{u}}_{j|i}$
             self.s += self.route_consts[child] * uhat
         # Squashing function
-        self.s = ((torch.norm(self.s)**2)/(1+torch.norm(self.s)**2)) * self.s/torch.norm(self.s)
+        
 
-# Pulling a Zoch
+# # Pulling a Zach!
 if __name__ == '__main__':
     cap = Capsule(15)
-
 

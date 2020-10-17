@@ -22,12 +22,12 @@ class ConvCapsLayer(nn.Module):
         
 # Class Caps Layer
 class ClassCapsLayer(nn.Module):
-    def __init__(self, length, routes, in_channels, out_channels, iterations):
+    def __init__(self, num_classes, routes, in_channels, out_channels, iterations):
         super(ClassCapsLayer, self).__init__()
         
         self.capsules = []
         self.iterations = iterations
-        self.route_weights = nn.Parameter(torch.randn(length, routes, in_channels, out_channels)) #https://github.com/gram-ai/capsule-networks/blob/master/capsule_network.py#L63
+        self.route_weights = nn.Parameter(torch.randn(num_classes, routes, in_channels, out_channels)) #https://github.com/gram-ai/capsule-networks/blob/master/capsule_network.py#L63
 
     @staticmethod
     def squash(s):

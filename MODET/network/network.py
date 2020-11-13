@@ -25,7 +25,8 @@ class CapsNet(nn.Module):
         return classes
 
 if __name__ == '__main__':
-    net = CapsNet(512)
+    pass
+#    net = CapsNet(512)
 #    net.add_caps_layer(10, 3) Unsure about how to handle dimensionalities for now
 #    net.add_caps_layer(10, 3)
 #    net.init_connections()

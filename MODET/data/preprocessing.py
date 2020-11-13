@@ -17,7 +17,7 @@ class Dataset():
                 raw_images.append(i[2])
                 raw_labels.append(i[3])
         self.labels = [json.loads(i) for i in raw_labels]
-        self.images = [np.asarray(self.get_pillow_from_URL(i)) for i in raw_images]
+        self.images = [np.asarray(self.get_pillow_from_URL(i).convert('LA')) for i in raw_images]
         self.bbox = self.__get_humans(self.labels)
 
     @staticmethod

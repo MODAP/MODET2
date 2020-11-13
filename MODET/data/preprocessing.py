@@ -16,17 +16,19 @@ class Dataset():
             for i in reader:
                 raw_images.append(i[2])
                 raw_labels.append(i[3])
-        self.labels = [[list(e["bbox"].values()) for e in (json.loads(i))["objects"]] for i in raw_labels]
+        self.labels = [json.loads(i) for i in raw_labels]
         self.images = [np.asarray(self.get_pillow_from_URL(i)) for i in raw_images]
+        self.bbox = self.__get_humans(self.labels)
 
-    def __get_humans(self):
+    @staticmethod
+    def __get_humans(data):
         cords = []
-        for i in self.labels:
+        for i in data:
             c = []
-            objects = i["object"]
+            objects = i["objects"]
             for obj in objects:
                if obj["title"] == "human":
-                  c.append(obj["bbox"])
+                   c.append(list(obj["bbox"].values()))
             cords.append(c) 
         return cords
 

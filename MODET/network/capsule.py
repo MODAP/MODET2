@@ -12,7 +12,7 @@ class ConvCapsLayer(nn.Module):
 
         super(ConvCapsLayer, self).__init__()
 
-        self.capsules = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernal_size) for _ in length])
+        self.capsules = nn.ModuleList([nn.Conv2d(in_channels, out_channels, kernal_size) for _ in range(length)])
 
     def forward(self, x):
         capsOut = [capsule(x).view(x.size(0), -1, 1) for capsule in self.capsules] # compile as a capsule, and rezie to [major, random, and 1] dims. for fire detections, there should be 2 classes --- fire, no fire.

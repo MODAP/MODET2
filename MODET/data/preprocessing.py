@@ -1,7 +1,10 @@
 import csv
 import json
 import requests
+import numpy as np
 from PIL import Image
+
+# {top, left, height, width}
 
 class Dataset():
     def __init__(self, datafile):
@@ -13,8 +16,8 @@ class Dataset():
             for i in reader:
                 raw_images.append(i[2])
                 raw_labels.append(i[3])
-        self.labels = [[e["bbox"] for e in (json.loads(i))["objects"]] for i in raw_labels]
-        self.images = [self.get_pillow_from_URL(i) for i in raw_images]
+        self.labels = [[list(e["bbox"].values()) for e in (json.loads(i))["objects"]] for i in raw_labels]
+        self.images = [np.asarray(self.get_pillow_from_URL(i)) for i in raw_images]
 
     def __get_humans(self):
         cords = []

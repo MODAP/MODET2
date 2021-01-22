@@ -35,7 +35,11 @@ class ClassCapsLayer(nn.Module):
     
     # AcTIve RouTIng!
     def forward(self, x): # x is input
-        priorsUij = x @ self.route_weights # We need to pad the dimensions of these two so that they can be dot producted
+        x_padded = x[None, :, :, None, :]
+        route_padded = self.route_weights[:, None, :, :, :]
+
+        breakpoint()
+        priorsUij = x  @ self.route_weights # We need to pad the dimensions of these two so that they can be dot producted
 
         logitsBij = torch.Variable(torch.zeros(*priorsUij.size()))# .cuda() uncomment when using cuda
         
